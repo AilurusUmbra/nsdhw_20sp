@@ -78,10 +78,24 @@ Convolution filters could be considered as a high dimensional tensor, so that te
 
 ## System architecture
 
-Most of the computation would be leverage to Pytorch framework, so that tensors could be easily move to VRAM of GPU to compute, and move back to RAM after computation.
-Models would takes `torch.tensor` as data strcuture to compute, this could be preprocessed after load data from mne. `torch.tensor` is easy to transformed into `numpy.array` which is commonly used in mne.
-This project might not implement tensorflow version of codes, because there is a similar developing frameworks called [mneflow]() [4]
+This project would be assumed that running on mobile devices due to the requirement of portability of BCI. Hence, the computation should only leverage to few CPUs, and most of the program would be written in C++.
 
+* A dataset could be considered as a pair of a tensor and a vector, which represents the EEG data of a person with corresponding label.
+
+### Training
+  * input each record of data in a mini-batch
+  * feature scaling (normalization)
+  * pass through the whole neural network and output the predicted label
+  * calculate the loss of this batch and backpropagate the gradient
+    *  save model if loss is low enough
+  * update weights of each layer by optimization algorithm 
+
+  
+### Testing (Inference)
+  
+  * input each record of data in a mini-batch
+  * feature scaling (normalization)
+  * pass through the whole neural network and output the predicted label.
 
 ## API description
 
@@ -126,7 +140,7 @@ This project would be mainly developed by C++11, python>=3.6 and based on Pytorc
 
 * 05/01 - 05/14: Implementing EEGNet, SCCNet and apply hyperparamter tuning to provide pretrained weights.
 * 05/15 - 05/29: Add Inverted residuals and SE Block into EEGNet and SCCNet.
-* 05/30 - 06/11: Build benchmark and add parallelism mechanism on both GPU and CPU computation.
+* 05/30 - 06/11: Build benchmark and test compatibility with PyTorch. Add parallelism if time is enough.
 * 06/12 -      : Build documents.
 
 ## References
